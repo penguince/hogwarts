@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hogwarts House Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+      background-color: #f9f9f9;
+    }
+    h2 {
+      margin-top: 30px;
+    }
+    .question {
+      margin-bottom: 20px;
+      background: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .answers button {
+      margin: 5px;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #eee;
+    }
+    .answers button.selected {
+      background-color: #d4edda;
+      font-weight: bold;
+    }
+    #submit {
+      margin-top: 30px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Hogwarts House Quiz</h1>
+
+  <form id="quizForm">
+    <div class="question" data-question="1">
+      <h2>1. What would you do if you saw someone being bullied?</h2>
+      <div class="answers">
+        <button type="button" data-house="Gryffindor">Stand up for them immediately.</button>
+        <button type="button" data-house="Ravenclaw">Come up with a clever way to distract the bully.</button>
+        <button type="button" data-house="Hufflepuff">Find a way to help without being noticed.</button>
+        <button type="button" data-house="Slytherin">Use the opportunity to gain favor with the bully.</button>
+      </div>
+    </div>
+
+    <div class="question" data-question="2">
+      <h2>2. Which of these do you value most?</h2>
+      <div class="answers">
+        <button type="button" data-house="Gryffindor">Bravery.</button>
+        <button type="button" data-house="Ravenclaw">Knowledge.</button>
+        <button type="button" data-house="Hufflepuff">Loyalty.</button>
+        <button type="button" data-house="Slytherin">Power.</button>
+      </div>
+    </div>
+
+    <div class="question" data-question="3">
+      <h2>3. How do you approach a challenge?</h2>
+      <div class="answers">
+        <button type="button" data-house="Gryffindor">Head-on, no hesitation.</button>
+        <button type="button" data-house="Ravenclaw">Analyze it from every angle first.</button>
+        <button type="button" data-house="Hufflepuff">Stick with a tried and true method.</button>
+        <button type="button" data-house="Slytherin">Find the smartest shortcut to win.</button>
+      </div>
+    </div>
+
+    <div class="question" data-question="4">
+      <h2>4. What kind of friend are you?</h2>
+      <div class="answers">
+        <button type="button" data-house="Gryffindor">The protector who jumps in first.</button>
+        <button type="button" data-house="Ravenclaw">The advice-giver who knows what to say.</button>
+        <button type="button" data-house="Hufflepuff">The dependable one everyone can count on.</button>
+        <button type="button" data-house="Slytherin">The strategic thinker who plans ahead.</button>
+      </div>
+    </div>
+
+    <div class="question" data-question="5">
+      <h2>5. If you had a magical ability, what would you choose?</h2>
+      <div class="answers">
+        <button type="button" data-house="Gryffindor">Mastering duels and combat spells.</button>
+        <button type="button" data-house="Ravenclaw">Learning every spell in existence.</button>
+        <button type="button" data-house="Hufflepuff">Using magic to help others daily.</button>
+        <button type="button" data-house="Slytherin">Bending magic to get ahead in life.</button>
+      </div>
+    </div>
+
+    <div class="question" data-question="6">
+      <h2>6. What kind of environment do you thrive in?</h2>
+      <div class="answers">
+        <button type="button" data-house="Gryffindor">Fast-paced and full of excitement.</button>
+        <button type="button" data-house="Ravenclaw">Quiet, where I can focus and think.</button>
+        <button type="button" data-house="Hufflepuff">Supportive and team-oriented.</button>
+        <button type="button" data-house="Slytherin">Competitive and full of opportunity.</button>
+      </div>
+    </div>
+
+    <div class="question" data-question="7">
+      <h2>7. A locked door blocks you. What do you do?</h2>
+      <div class="answers">
+        <button type="button" data-house="Gryffindor">Kick it down if needed.</button>
+        <button type="button" data-house="Ravenclaw">Look for a hidden clue or riddle.</button>
+        <button type="button" data-house="Hufflepuff">Ask for help or wait patiently.</button>
+        <button type="button" data-house="Slytherin">Pick the lock or find a way around.</button>
+      </div>
+    </div>
+
+    <button id="submit" type="submit">Submit</button>
+  </form>
+
+  <script>
+    const selections = {};
+
+    document.querySelectorAll('.answers button').forEach(button => {
+      button.addEventListener('click', () => {
+        const questionDiv = button.closest('.question');
+        const questionId = questionDiv.dataset.question;
+
+        // Deselect previous
+        questionDiv.querySelectorAll('button').forEach(btn => btn.classList.remove('selected'));
+
+        // Select new
+        button.classList.add('selected');
+        selections[questionId] = button.dataset.house;
+      });
+    });
+
+    document.getElementById('quizForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      console.log("User selections:", selections);
+      // You could replace this alert with any further logic (like scoring or redirection)
+      alert('Thank you! Your answers have been submitted.');
+    });
+  </script>
+</body>
+</html>
