@@ -6,14 +6,21 @@
   <style>
     body {
       font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-image: url('https://cdn11.bigcommerce.com/s-25lxi3ukii/images/stencil/1280x1280/products/2749/7468/warner-brothers-harry-potter-hogwarts-shield__18563.1734182416.png?c=1');
+      background-size: cover;
+      background-position: center;
+    }
+
+    .container {
       padding: 20px;
       max-width: 800px;
       margin: auto;
-      background-color: #f9f9f9;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
     }
-    h2 {
-      margin-top: 30px;
-    }
+
     .question {
       margin-bottom: 20px;
       background: #fff;
@@ -21,6 +28,7 @@
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
+
     .answers button {
       margin: 5px;
       padding: 10px 15px;
@@ -29,10 +37,12 @@
       cursor: pointer;
       background-color: #eee;
     }
+
     .answers button.selected {
       background-color: #d4edda;
       font-weight: bold;
     }
+
     #submit {
       margin-top: 30px;
       padding: 10px 20px;
@@ -43,97 +53,207 @@
       color: white;
       cursor: pointer;
     }
+
+    #quizForm {
+      display: none;
+    }
+
+    #welcome {
+      margin-top: 100px;
+      color: white;
+      text-shadow: 1px 1px 4px #000;
+      text-align: center;
+    }
+
+    #startBtn {
+      margin-top: 20px;
+      padding: 12px 24px;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+
+    #loadingScreen {
+      display: none;
+      text-align: center;
+      margin-top: 100px;
+    }
+
+    #loadingScreen h2 {
+      color: white;
+      text-shadow: 1px 1px 4px black;
+    }
+
+    .pl {
+      width: 6em;
+      height: 6em;
+      margin: auto;
+    }
+
+    .pl__ring {
+      animation: ringA 2s linear infinite;
+    }
+
+    .pl__ring--a { stroke: #f42f25; }
+    .pl__ring--b { animation-name: ringB; stroke: #ffdd00; }
+    .pl__ring--c { animation-name: ringC; stroke: #255ff4; }
+    .pl__ring--d { animation-name: ringD; stroke: #2cf425; }
+
+    @keyframes ringA {
+      from, 4% { stroke-dasharray: 0 660; stroke-width: 20; stroke-dashoffset: -330; }
+      12% { stroke-dasharray: 60 600; stroke-width: 30; stroke-dashoffset: -335; }
+      32% { stroke-dasharray: 60 600; stroke-width: 30; stroke-dashoffset: -595; }
+      40%, 54% { stroke-dasharray: 0 660; stroke-width: 20; stroke-dashoffset: -660; }
+      62% { stroke-dasharray: 60 600; stroke-width: 30; stroke-dashoffset: -665; }
+      82% { stroke-dasharray: 60 600; stroke-width: 30; stroke-dashoffset: -925; }
+      90%, to { stroke-dasharray: 0 660; stroke-width: 20; stroke-dashoffset: -990; }
+    }
+
+    @keyframes ringB {
+      from, 12% { stroke-dasharray: 0 220; stroke-width: 20; stroke-dashoffset: -110; }
+      20% { stroke-dasharray: 20 200; stroke-width: 30; stroke-dashoffset: -115; }
+      40% { stroke-dasharray: 20 200; stroke-width: 30; stroke-dashoffset: -195; }
+      48%, 62% { stroke-dasharray: 0 220; stroke-width: 20; stroke-dashoffset: -220; }
+      70% { stroke-dasharray: 20 200; stroke-width: 30; stroke-dashoffset: -225; }
+      90% { stroke-dasharray: 20 200; stroke-width: 30; stroke-dashoffset: -305; }
+      98%, to { stroke-dasharray: 0 220; stroke-width: 20; stroke-dashoffset: -330; }
+    }
+
+    @keyframes ringC {
+      from { stroke-dasharray: 0 440; stroke-width: 20; stroke-dashoffset: 0; }
+      8% { stroke-dasharray: 40 400; stroke-width: 30; stroke-dashoffset: -5; }
+      28% { stroke-dasharray: 40 400; stroke-width: 30; stroke-dashoffset: -175; }
+      36%, 58% { stroke-dasharray: 0 440; stroke-width: 20; stroke-dashoffset: -220; }
+      66% { stroke-dasharray: 40 400; stroke-width: 30; stroke-dashoffset: -225; }
+      86% { stroke-dasharray: 40 400; stroke-width: 30; stroke-dashoffset: -395; }
+      94%, to { stroke-dasharray: 0 440; stroke-width: 20; stroke-dashoffset: -440; }
+    }
+
+    @keyframes ringD {
+      from, 8% { stroke-dasharray: 0 440; stroke-width: 20; stroke-dashoffset: 0; }
+      16% { stroke-dasharray: 40 400; stroke-width: 30; stroke-dashoffset: -5; }
+      36% { stroke-dasharray: 40 400; stroke-width: 30; stroke-dashoffset: -175; }
+      44%, 50% { stroke-dasharray: 0 440; stroke-width: 20; stroke-dashoffset: -220; }
+      58% { stroke-dasharray: 40 400; stroke-width: 30; stroke-dashoffset: -225; }
+      78% { stroke-dasharray: 40 400; stroke-width: 30; stroke-dashoffset: -395; }
+      86%, to { stroke-dasharray: 0 440; stroke-width: 20; stroke-dashoffset: -440; }
+    }
   </style>
 </head>
 <body>
-  <h1>Hogwarts House Quiz</h1>
 
-  <form id="quizForm">
-    <div class="question" data-question="1">
-      <h2>1. What would you do if you saw someone being bullied?</h2>
-      <div class="answers">
-        <button type="button" data-house="Gryffindor">Stand up for them immediately.</button>
-        <button type="button" data-house="Ravenclaw">Come up with a clever way to distract the bully.</button>
-        <button type="button" data-house="Hufflepuff">Find a way to help without being noticed.</button>
-        <button type="button" data-house="Slytherin">Use the opportunity to gain favor with the bully.</button>
-      </div>
+  <div class="container">
+    <div id="welcome">
+      <h1>Hello, welcome to the Hogwarts Hat survey!</h1>
+      <p>Click the button to continue.</p>
+      <button id="startBtn">Start Quiz</button>
     </div>
 
-    <div class="question" data-question="2">
-      <h2>2. Which of these do you value most?</h2>
-      <div class="answers">
-        <button type="button" data-house="Gryffindor">Bravery.</button>
-        <button type="button" data-house="Ravenclaw">Knowledge.</button>
-        <button type="button" data-house="Hufflepuff">Loyalty.</button>
-        <button type="button" data-house="Slytherin">Power.</button>
-      </div>
-    </div>
+    <form id="quizForm">
+      <h1>Hogwarts House Quiz</h1>
 
-    <div class="question" data-question="3">
-      <h2>3. How do you approach a challenge?</h2>
-      <div class="answers">
-        <button type="button" data-house="Gryffindor">Head-on, no hesitation.</button>
-        <button type="button" data-house="Ravenclaw">Analyze it from every angle first.</button>
-        <button type="button" data-house="Hufflepuff">Stick with a tried and true method.</button>
-        <button type="button" data-house="Slytherin">Find the smartest shortcut to win.</button>
-      </div>
-    </div>
+      <!-- All 7 Questions Included -->
 
-    <div class="question" data-question="4">
-      <h2>4. What kind of friend are you?</h2>
-      <div class="answers">
-        <button type="button" data-house="Gryffindor">The protector who jumps in first.</button>
-        <button type="button" data-house="Ravenclaw">The advice-giver who knows what to say.</button>
-        <button type="button" data-house="Hufflepuff">The dependable one everyone can count on.</button>
-        <button type="button" data-house="Slytherin">The strategic thinker who plans ahead.</button>
+      <div class="question" data-question="1">
+        <h2>1. What would you do if you saw someone being bullied?</h2>
+        <div class="answers">
+          <button type="button" data-house="Gryffindor">Stand up for them immediately.</button>
+          <button type="button" data-house="Ravenclaw">Come up with a clever way to distract the bully.</button>
+          <button type="button" data-house="Hufflepuff">Find a way to help without being noticed.</button>
+          <button type="button" data-house="Slytherin">Use the opportunity to gain favor with the bully.</button>
+        </div>
       </div>
-    </div>
 
-    <div class="question" data-question="5">
-      <h2>5. If you had a magical ability, what would you choose?</h2>
-      <div class="answers">
-        <button type="button" data-house="Gryffindor">Mastering duels and combat spells.</button>
-        <button type="button" data-house="Ravenclaw">Learning every spell in existence.</button>
-        <button type="button" data-house="Hufflepuff">Using magic to help others daily.</button>
-        <button type="button" data-house="Slytherin">Bending magic to get ahead in life.</button>
+      <div class="question" data-question="2">
+        <h2>2. Which of these do you value most?</h2>
+        <div class="answers">
+          <button type="button" data-house="Gryffindor">Bravery.</button>
+          <button type="button" data-house="Ravenclaw">Knowledge.</button>
+          <button type="button" data-house="Hufflepuff">Loyalty.</button>
+          <button type="button" data-house="Slytherin">Power.</button>
+        </div>
       </div>
-    </div>
 
-    <div class="question" data-question="6">
-      <h2>6. What kind of environment do you thrive in?</h2>
-      <div class="answers">
-        <button type="button" data-house="Gryffindor">Fast-paced and full of excitement.</button>
-        <button type="button" data-house="Ravenclaw">Quiet, where I can focus and think.</button>
-        <button type="button" data-house="Hufflepuff">Supportive and team-oriented.</button>
-        <button type="button" data-house="Slytherin">Competitive and full of opportunity.</button>
+      <div class="question" data-question="3">
+        <h2>3. How do you approach a challenge?</h2>
+        <div class="answers">
+          <button type="button" data-house="Gryffindor">Head-on, no hesitation.</button>
+          <button type="button" data-house="Ravenclaw">Analyze it from every angle first.</button>
+          <button type="button" data-house="Hufflepuff">Stick with a tried and true method.</button>
+          <button type="button" data-house="Slytherin">Find the smartest shortcut to win.</button>
+        </div>
       </div>
-    </div>
 
-    <div class="question" data-question="7">
-      <h2>7. A locked door blocks you. What do you do?</h2>
-      <div class="answers">
-        <button type="button" data-house="Gryffindor">Kick it down if needed.</button>
-        <button type="button" data-house="Ravenclaw">Look for a hidden clue or riddle.</button>
-        <button type="button" data-house="Hufflepuff">Ask for help or wait patiently.</button>
-        <button type="button" data-house="Slytherin">Pick the lock or find a way around.</button>
+      <div class="question" data-question="4">
+        <h2>4. What kind of friend are you?</h2>
+        <div class="answers">
+          <button type="button" data-house="Gryffindor">The protector who jumps in first.</button>
+          <button type="button" data-house="Ravenclaw">The advice-giver who knows what to say.</button>
+          <button type="button" data-house="Hufflepuff">The dependable one everyone can count on.</button>
+          <button type="button" data-house="Slytherin">The strategic thinker who plans ahead.</button>
+        </div>
       </div>
-    </div>
 
-    <button id="submit" type="submit">Submit</button>
-  </form>
+      <div class="question" data-question="5">
+        <h2>5. If you had a magical ability, what would you choose?</h2>
+        <div class="answers">
+          <button type="button" data-house="Gryffindor">Mastering duels and combat spells.</button>
+          <button type="button" data-house="Ravenclaw">Learning every spell in existence.</button>
+          <button type="button" data-house="Hufflepuff">Using magic to help others daily.</button>
+          <button type="button" data-house="Slytherin">Bending magic to get ahead in life.</button>
+        </div>
+      </div>
+
+      <div class="question" data-question="6">
+        <h2>6. What kind of environment do you thrive in?</h2>
+        <div class="answers">
+          <button type="button" data-house="Gryffindor">Fast-paced and full of excitement.</button>
+          <button type="button" data-house="Ravenclaw">Quiet, where I can focus and think.</button>
+          <button type="button" data-house="Hufflepuff">Supportive and team-oriented.</button>
+          <button type="button" data-house="Slytherin">Competitive and full of opportunity.</button>
+        </div>
+      </div>
+
+      <div class="question" data-question="7">
+        <h2>7. A locked door blocks you. What do you do?</h2>
+        <div class="answers">
+          <button type="button" data-house="Gryffindor">Kick it down if needed.</button>
+          <button type="button" data-house="Ravenclaw">Look for a hidden clue or riddle.</button>
+          <button type="button" data-house="Hufflepuff">Ask for help or wait patiently.</button>
+          <button type="button" data-house="Slytherin">Pick the lock or find a way around.</button>
+        </div>
+      </div>
+
+      <button id="submit" type="submit">Submit</button>
+    </form>
+  </div>
+
+  <div id="loadingScreen">
+    <h2>Loading Results...</h2>
+    <svg viewBox="0 0 240 240" height="240" width="240" class="pl">
+      <circle class="pl__ring pl__ring--a" cx="120" cy="120" r="105" fill="none" stroke="#000" stroke-width="20" stroke-dasharray="0 660" stroke-dashoffset="-330" stroke-linecap="round"></circle>
+      <circle class="pl__ring pl__ring--b" cx="120" cy="120" r="35" fill="none" stroke="#000" stroke-width="20" stroke-dasharray="0 220" stroke-dashoffset="-110" stroke-linecap="round"></circle>
+      <circle class="pl__ring pl__ring--c" cx="85" cy="120" r="70" fill="none" stroke="#000" stroke-width="20" stroke-dasharray="0 440" stroke-linecap="round"></circle>
+      <circle class="pl__ring pl__ring--d" cx="155" cy="120" r="70" fill="none" stroke="#000" stroke-width="20" stroke-dasharray="0 440" stroke-linecap="round"></circle>
+    </svg>
+  </div>
 
   <script>
     const selections = {};
+
+    document.getElementById('startBtn').addEventListener('click', () => {
+      document.getElementById('welcome').style.display = 'none';
+      document.getElementById('quizForm').style.display = 'block';
+    });
 
     document.querySelectorAll('.answers button').forEach(button => {
       button.addEventListener('click', () => {
         const questionDiv = button.closest('.question');
         const questionId = questionDiv.dataset.question;
-
-        // Deselect previous
         questionDiv.querySelectorAll('button').forEach(btn => btn.classList.remove('selected'));
-
-        // Select new
         button.classList.add('selected');
         selections[questionId] = button.dataset.house;
       });
@@ -141,9 +261,14 @@
 
     document.getElementById('quizForm').addEventListener('submit', (e) => {
       e.preventDefault();
-      console.log("User selections:", selections);
-      // You could replace this alert with any further logic (like scoring or redirection)
-      alert('Thank you! Your answers have been submitted.');
+      document.getElementById('quizForm').style.display = 'none';
+      document.getElementById('loadingScreen').style.display = 'block';
+
+      // Simulate loading delay
+      setTimeout(() => {
+        document.getElementById('loadingScreen').innerHTML += '<p style="color:white;">Thank you! Results are being calculated.</p>';
+        console.log("User selections:", selections);
+      }, 3000);
     });
   </script>
 </body>
