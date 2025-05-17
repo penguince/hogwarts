@@ -279,14 +279,78 @@
 
     document.getElementById('quizForm').addEventListener('submit', (e) => {
       e.preventDefault();
+      
+      // Check if all questions have been answered
+      const questionCount = document.querySelectorAll('.question').length;
+      if (Object.keys(selections).length < questionCount) {
+        alert("Please answer all questions before submitting.");
+        return;
+      }
+      
       document.getElementById('quizForm').style.display = 'none';
       document.getElementById('loadingScreen').style.display = 'block';
 
-      // Simulate loading delay
-      setTimeout(() => {
-        document.getElementById('loadingScreen').innerHTML += '<p style="color:white;">Thanks for waiting! Your result is being calculated.</p>';
-        console.log("User selections:", selections);
-      }, 3000);
+      // Send data to the backend
+      fetch('/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(selections)
+      })
+      .then(response => response.json())
+      .then(data => {
+        setTimeout(() => {
+          // Display the result with house-specific styling
+          document.getElementById('loadingScreen').style.display = 'none';
+          
+          // Set house-specific colors
+          let bgColor, textColor;
+          switch(data.house) {
+            case 'Gryffindor':
+              bgColor = '#740001';
+              textColor = '#D3A625';
+              break;
+            case 'Hufflepuff':
+              bgColor = '#ECB939';
+              textColor = '#000000';
+              break;
+            case 'Ravenclaw':
+              bgColor = '#0E1A40';
+              textColor = '#946B2D';
+              break;
+            case 'Slytherin':
+              bgColor = '#1A472A';
+              textColor = '#5D5D5D';
+              break;
+          }
+          
+          const resultDiv = document.createElement('div');
+          resultDiv.style.cssText = `
+            text-align: center; 
+            margin: 50px auto; 
+            padding: 30px; 
+            background-color: ${bgColor}; 
+            color: ${textColor}; 
+            border-radius: 10px;
+          `;
+          
+          resultDiv.innerHTML = `
+            <h1>The Sorting Hat Has Decided!</h1>
+            <h2 style="font-size: 2.5em;">You belong in ${data.house}!</h2>
+            <div style="margin-top: 20px;">
+              <a href="/" style="margin-right: 20px; padding: 10px; background-color: #333; color: white; text-decoration: none; border-radius: 5px;">Try Again</a>
+              <a href="/houses" style="padding: 10px; background-color: #333; color: white; text-decoration: none; border-radius: 5px;">View All Houses</a>
+            </div>
+          `;
+          
+          document.querySelector('.container').appendChild(resultDiv);
+        }, 3000);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('loadingScreen').innerHTML = '<h2 style="color: white;">An error occurred. Please try again.</h2>';
+      });
     });
   </script>
 </body>
