@@ -2,8 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Hogwarts House Quiz</title>
+  <title>Sorting Hat Quiz</title>
   <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      height: 100%;
+      overflow-x: hidden;
+    }
+
     video.bg-video {
       position: fixed;
       top: 0;
@@ -13,344 +21,242 @@
       object-fit: cover;
       z-index: -1;
     }
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-size: cover;
-      background-position: center;
-      transition: background-image 0.5s ease;
-    }
 
     .container {
-      padding: 20px;
       max-width: 800px;
-      margin: auto;
-      background-color: rgba(255, 255, 255, 0.9);
-      border-radius: 10px;
-    }
-
-    h2 {
-      margin-top: 30px;
+      margin: 100px auto;
+      padding: 30px;
+      background-color: rgba(255, 255, 255, 0.92);
+      border-radius: 12px;
+      text-align: center;
     }
 
     .question {
       margin-bottom: 20px;
-      background: #fff;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
       text-align: left;
     }
 
     .answers button {
-      margin: 5px;
-      padding: 10px 15px;
+      display: block;
+      width: 100%;
+      margin: 6px 0;
+      padding: 10px;
+      border-radius: 6px;
       border: none;
-      border-radius: 5px;
       cursor: pointer;
       background-color: #eee;
     }
 
     .answers button.selected {
-      background-color: #d4edda;
+      background-color: #a8e6cf;
       font-weight: bold;
     }
 
-    #submit {
-      margin-top: 30px;
-      padding: 10px 20px;
-      font-size: 16px;
-      border: none;
-      border-radius: 6px;
-      background-color: #4CAF50;
-      color: white;
-      cursor: pointer;
-    }
-
-    #quizForm {
-      display: none;
-    }
-
-    #welcome {
-      margin-top: 100px;
-      color: white;
-      text-shadow: 1px 1px 4px #000;
-      text-align: center;
-    }
-
-    #startBtn {
+    #submitBtn {
       margin-top: 20px;
       padding: 12px 24px;
-      font-size: 18px;
-      border: none;
-      border-radius: 8px;
       background-color: #4CAF50;
       color: white;
+      border: none;
+      border-radius: 6px;
       cursor: pointer;
+      font-size: 16px;
+    }
+
+    #quizForm, #loadingScreen, #resultScreen {
+      display: none;
     }
 
     #loadingScreen {
-      display: none;
       text-align: center;
-      margin-top: 100px;
-    }
-
-    #loadingScreen h2 {
       color: white;
-      text-shadow: 1px 1px 4px black;
+      margin-top: 150px;
     }
 
-    .pl {
-      width: 6em;
-      height: 6em;
-      margin: auto;
+    .spinner {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #4CAF50;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
     }
 
-    .pl__ring {
-      animation: ringA 2s linear infinite;
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
-    .pl__ring--a { stroke: #f42f25; }
-    .pl__ring--b { animation-name: ringB; stroke: #ffdd00; }
-    .pl__ring--c { animation-name: ringC; stroke: #255ff4; }
-    .pl__ring--d { animation-name: ringD; stroke: #2cf425; }
-
-    @keyframes ringA {
-      from, 4% { stroke-dasharray: 0 660; stroke-width: 20; stroke-dashoffset: -330; }
-      12% { stroke-dasharray: 60 600; stroke-width: 30; stroke-dashoffset: -335; }
-      32% { stroke-dasharray: 60 600; stroke-width: 30; stroke-dashoffset: -595; }
-      40%, 54% { stroke-dasharray: 0 660; stroke-width: 20; stroke-dashoffset: -660; }
-      62% { stroke-dasharray: 60 600; stroke-width: 30; stroke-dashoffset: -665; }
-      82% { stroke-dasharray: 60 600; stroke-width: 30; stroke-dashoffset: -925; }
-      90%, to { stroke-dasharray: 0 660; stroke-width: 20; stroke-dashoffset: -990; }
+    #finalResult {
+      color: black;
+      font-size: 2em;
+      margin-top: 150px;
+      white-space: pre-line;
     }
 
-    @keyframes ringB {
-      from, 12% { stroke-dasharray: 0 220; stroke-width: 20; stroke-dashoffset: -110; }
-      20% { stroke-dasharray: 20 200; stroke-width: 30; stroke-dashoffset: -115; }
-      40% { stroke-dasharray: 20 200; stroke-width: 30; stroke-dashoffset: -195; }
-      48%, 62% { stroke-dasharray: 0 220; stroke-width: 20; stroke-dashoffset: -220; }
-      70% { stroke-dasharray: 20 200; stroke-width: 30; stroke-dashoffset: -225; }
-      90% { stroke-dasharray: 20 200; stroke-width: 30; stroke-dashoffset: -305; }
-      98%, to { stroke-dasharray: 0 220; stroke-width: 20; stroke-dashoffset: -330; }
-    }
-
-    @keyframes ringC {
-      from { stroke-dasharray: 0 440; stroke-width: 20; stroke-dashoffset: 0; }
-      8% { stroke-dasharray: 40 400; stroke-width: 30; stroke-dashoffset: -5; }
-      28% { stroke-dasharray: 40 400; stroke-width: 30; stroke-dashoffset: -175; }
-      36%, 58% { stroke-dasharray: 0 440; stroke-width: 20; stroke-dashoffset: -220; }
-      66% { stroke-dasharray: 40 400; stroke-width: 30; stroke-dashoffset: -225; }
-      86% { stroke-dasharray: 40 400; stroke-width: 30; stroke-dashoffset: -395; }
-      94%, to { stroke-dasharray: 0 440; stroke-width: 20; stroke-dashoffset: -440; }
-    }
-
-    @keyframes ringD {
-      from, 8% { stroke-dasharray: 0 440; stroke-width: 20; stroke-dashoffset: 0; }
-      16% { stroke-dasharray: 40 400; stroke-width: 30; stroke-dashoffset: -5; }
-      36% { stroke-dasharray: 40 400; stroke-width: 30; stroke-dashoffset: -175; }
-      44%, 50% { stroke-dasharray: 0 440; stroke-width: 20; stroke-dashoffset: -220; }
-      58% { stroke-dasharray: 40 400; stroke-width: 30; stroke-dashoffset: -225; }
-      78% { stroke-dasharray: 40 400; stroke-width: 30; stroke-dashoffset: -395; }
-      86%, to { stroke-dasharray: 0 440; stroke-width: 20; stroke-dashoffset: -440; }
+    button:hover {
+      opacity: 0.9;
     }
   </style>
 </head>
 <body>
+
   <video class="bg-video" autoplay muted loop>
     <source src="vecteezy_animated-flying-through-the-stars-and-blue-and-red-in-space_8079146.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
 
-  <div class="container">
-    <div id="welcome">
-      <h1>Hello, welcome to the Hogwarts Hat survey!</h1>
-      <p>Click the button to continue.</p>
-      <button id="startBtn">Start Quiz</button>
-    </div>
-
-    
-<form id="quizForm">
-  <h1>Hogwarts House Quiz</h1>
-
-  <div class="question" data-question="1">
-    <h2>1. What would you do if you saw someone being bullied?</h2>
-    <div class="answers">
-      <button type="button" data-house="Gryffindor">Stand up for them immediately.</button>
-      <button type="button" data-house="Ravenclaw">Come up with a clever way to distract the bully.</button>
-      <button type="button" data-house="Hufflepuff">Find a way to help without being noticed.</button>
-      <button type="button" data-house="Slytherin">Use the opportunity to gain favor with the bully.</button>
-    </div>
+  <div id="welcomeScreen" class="container">
+    <h1>Welcome to the Hogwarts Sorting Hat Quiz!</h1>
+    <p>Click the button below to begin your magical journey.</p>
+    <button onclick="startQuiz()">Start Quiz</button>
   </div>
 
-  <div class="question" data-question="2">
-    <h2>2. Which of these do you value most?</h2>
-    <div class="answers">
-      <button type="button" data-house="Gryffindor">Bravery.</button>
-      <button type="button" data-house="Ravenclaw">Knowledge.</button>
-      <button type="button" data-house="Hufflepuff">Loyalty.</button>
-      <button type="button" data-house="Slytherin">Power.</button>
+  <form id="quizForm" class="container">
+    <h2>Answer the following questions:</h2>
+
+   <div class="question" data-id="1">
+      <p>1. What would you do if you saw someone being bullied?</p>
+      <div class="answers">
+        <button type="button" data-house="Gryffindor">A. Stand up for them immediately</button>
+        <button type="button" data-house="Ravenclaw">B. Come up with a clever way to distract the bully</button>
+        <button type="button" data-house="Hufflepuff">C. Find a way to help without being noticed</button>
+        <button type="button" data-house="Slytherin">D. Use the opportunity to gain favor with the bully</button>
+      </div>
     </div>
-  </div>
-
-  <div class="question" data-question="3">
-    <h2>3. How do you approach a challenge?</h2>
-    <div class="answers">
-      <button type="button" data-house="Gryffindor">Head-on, no hesitation.</button>
-      <button type="button" data-house="Ravenclaw">Analyze it from every angle first.</button>
-      <button type="button" data-house="Hufflepuff">Stick with a tried and true method.</button>
-      <button type="button" data-house="Slytherin">Find the smartest shortcut to win.</button>
+    <div class="question" data-id="2">
+      <p>2. Which of these do you value most?</p>
+      <div class="answers">
+        <button type="button" data-house="Gryffindor">A. Bravery</button>
+        <button type="button" data-house="Ravenclaw">B. Knowledge</button>
+        <button type="button" data-house="Hufflepuff">C. Loyalty</button>
+        <button type="button" data-house="Slytherin">D. Power</button>
+      </div>
     </div>
-  </div>
-
-  <div class="question" data-question="4">
-    <h2>4. What kind of friend are you?</h2>
-    <div class="answers">
-      <button type="button" data-house="Gryffindor">The protector who jumps in first.</button>
-      <button type="button" data-house="Ravenclaw">The advice-giver who knows what to say.</button>
-      <button type="button" data-house="Hufflepuff">The dependable one everyone can count on.</button>
-      <button type="button" data-house="Slytherin">The strategic thinker who plans ahead.</button>
+    <div class="question" data-id="3">
+      <p>3. How do you approach a challenge?</p>
+      <div class="answers">
+        <button type="button" data-house="Gryffindor">A. Head-on, no hesitation</button>
+        <button type="button" data-house="Ravenclaw">B. Analyze it from every angle first</button>
+        <button type="button" data-house="Hufflepuff">C. Stick with a tried and true method</button>
+        <button type="button" data-house="Slytherin">D. Find the smartest shortcut to win</button>
+      </div>
     </div>
-  </div>
-
-  <div class="question" data-question="5">
-    <h2>5. If you had a magical ability, what would you choose?</h2>
-    <div class="answers">
-      <button type="button" data-house="Gryffindor">Mastering duels and combat spells.</button>
-      <button type="button" data-house="Ravenclaw">Learning every spell in existence.</button>
-      <button type="button" data-house="Hufflepuff">Using magic to help others daily.</button>
-      <button type="button" data-house="Slytherin">Bending magic to get ahead in life.</button>
+    <div class="question" data-id="4">
+      <p>4. What kind of friend are you?</p>
+      <div class="answers">
+        <button type="button" data-house="Gryffindor">A. The protector who jumps in first</button>
+        <button type="button" data-house="Ravenclaw">B. The advice-giver who knows what to say</button>
+        <button type="button" data-house="Hufflepuff">C. The dependable one everyone can count on.</button>
+        <button type="button" data-house="Slytherin">D. The strategic thinker who plans ahead</button>
+      </div>
     </div>
-  </div>
-
-  <div class="question" data-question="6">
-    <h2>6. What kind of environment do you thrive in?</h2>
-    <div class="answers">
-      <button type="button" data-house="Gryffindor">Fast-paced and full of excitement.</button>
-      <button type="button" data-house="Ravenclaw">Quiet, where I can focus and think.</button>
-      <button type="button" data-house="Hufflepuff">Supportive and team-oriented.</button>
-      <button type="button" data-house="Slytherin">Competitive and full of opportunity.</button>
+    <div class="question" data-id="5">
+      <p>5. If you had a magical ability, what would you choose?</p>
+      <div class="answers">
+        <button type="button" data-house="Gryffindor">A. Mastering duels and combat spells</button>
+        <button type="button" data-house="Ravenclaw">B.  Learning every spell in existence</button>
+        <button type="button" data-house="Hufflepuff">C. Using magic to help others daily</button>
+        <button type="button" data-house="Slytherin">D. Bending magic to get ahead in life</button>
+      </div>
     </div>
-  </div>
-
-  <div class="question" data-question="7">
-    <h2>7. A locked door blocks you. What do you do?</h2>
-    <div class="answers">
-      <button type="button" data-house="Gryffindor">Kick it down if needed.</button>
-      <button type="button" data-house="Ravenclaw">Look for a hidden clue or riddle.</button>
-      <button type="button" data-house="Hufflepuff">Ask for help or wait patiently.</button>
-      <button type="button" data-house="Slytherin">Pick the lock or find a way around.</button>
+    <div class="question" data-id="6">
+      <p>6. What kind of environment do you thrive in?</p>
+      <div class="answers">
+        <button type="button" data-house="Gryffindor">A. Fast-paced and full of excitement</button>
+        <button type="button" data-house="Ravenclaw">B. Quiet, where I can focus and think</button>
+        <button type="button" data-house="Hufflepuff">C. Supportive and team-oriented</button>
+        <button type="button" data-house="Slytherin">D. Competitive and full of opportunity</button>
+      </div>
     </div>
+    <div class="question" data-id="7">
+      <p>7. A locked door blocks you. What do you do?</p>
+      <div class="answers">
+        <button type="button" data-house="Gryffindor">A. Kick it down if needed</button>
+        <button type="button" data-house="Ravenclaw">B. Look for a hidden clue or riddle</button>
+        <button type="button" data-house="Hufflepuff">C. Ask for help or wait patiently</button>
+        <button type="button" data-house="Slytherin">D. Pick the lock or find a way around</button>
+      </div>
+    </div>
+
+    <button type="button" id="submitBtn">Submit</button>
+  </form>
+
+  <div id="loadingScreen" class="container">
+    <h2>The Hat is thinking...</h2>
+    <div class="spinner"></div>
   </div>
 
-  <button id="submit" type="submit">Submit</button>
-</form>
-
-  </div>
-
-  <div id="loadingScreen">
-    <h2>Loading Results...</h2>
-    <svg viewBox="0 0 240 240" height="240" width="240" class="pl">
-      <circle class="pl__ring pl__ring--a" cx="120" cy="120" r="105" fill="none" stroke="#000" stroke-width="20" stroke-dasharray="0 660" stroke-dashoffset="-330" stroke-linecap="round"></circle>
-      <circle class="pl__ring pl__ring--b" cx="120" cy="120" r="35" fill="none" stroke="#000" stroke-width="20" stroke-dasharray="0 220" stroke-dashoffset="-110" stroke-linecap="round"></circle>
-      <circle class="pl__ring pl__ring--c" cx="85" cy="120" r="70" fill="none" stroke="#000" stroke-width="20" stroke-dasharray="0 440" stroke-linecap="round"></circle>
-      <circle class="pl__ring pl__ring--d" cx="155" cy="120" r="70" fill="none" stroke="#000" stroke-width="20" stroke-dasharray="0 440" stroke-linecap="round"></circle>
-    </svg>
+  <div id="resultScreen" class="container">
+    <h2 id="finalResult"></h2>
+    <div id="houseAudio" style="margin-top: 30px;"></div>
   </div>
 
   <script>
     const selections = {};
 
-    document.getElementById('startBtn').addEventListener('click', () => {
-      document.getElementById('welcome').style.display = 'none';
-      document.getElementById('quizForm').style.display = 'block';
-    });
+    function startQuiz() {
+      document.getElementById("welcomeScreen").style.display = "none";
+      document.getElementById("quizForm").style.display = "block";
+    }
 
-    document.querySelectorAll('.answers button').forEach(button => {
-      button.addEventListener('click', () => {
-        const questionDiv = button.closest('.question');
-        const questionId = questionDiv.dataset.question;
-        questionDiv.querySelectorAll('button').forEach(btn => btn.classList.remove('selected'));
-        button.classList.add('selected');
-        selections[questionId] = button.dataset.house;
+    document.querySelectorAll('.answers button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const questionDiv = btn.closest('.question');
+        const qid = questionDiv.dataset.id;
+        questionDiv.querySelectorAll('button').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selections[qid] = btn.dataset.house;
       });
     });
 
-    document.getElementById('quizForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      
-      // Check if all questions have been answered
-      const questionCount = document.querySelectorAll('.question').length;
-      if (Object.keys(selections).length < questionCount) {
+    function playHouseAudio(house) {
+      const audioLinks = {
+        Gryffindor: "https://www.youtube.com/embed/QIMtW4Jh1Xo?autoplay=1",
+        Slytherin: "https://www.youtube.com/embed/ozC4uWuJ-d0?autoplay=1",
+        Hufflepuff: "https://www.youtube.com/embed/VfZ1xZTF_RA?autoplay=1",
+        Ravenclaw: "https://www.youtube.com/embed/O9XVYs-aSW0?autoplay=1"
+      };
+
+      const iframe = document.createElement('iframe');
+      iframe.width = "0";
+      iframe.height = "0";
+      iframe.style.display = "none";
+      iframe.src = audioLinks[house];
+      iframe.allow = "autoplay";
+      iframe.allowFullscreen = false;
+
+      const container = document.getElementById("houseAudio");
+      container.innerHTML = "";
+      container.appendChild(iframe);
+    }
+
+    document.getElementById("submitBtn").addEventListener("click", () => {
+      if (Object.keys(selections).length < 7) {
         alert("Please answer all questions before submitting.");
         return;
       }
-      
-      document.getElementById('quizForm').style.display = 'none';
-      document.getElementById('loadingScreen').style.display = 'block';
 
-      // Send data to the backend
-      fetch('/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(selections)
-      })
-      .then(response => response.json())
-      .then(data => {
-        setTimeout(() => {
-          // Display the result with house-specific styling
-          document.getElementById('loadingScreen').style.display = 'none';
-          
-          // Set house-specific colors
-          let bgColor, textColor;
-          switch(data.house) {
-            case 'Gryffindor':
-              bgColor = '#740001';
-              textColor = '#D3A625';
-              break;
-            case 'Hufflepuff':
-              bgColor = '#ECB939';
-              textColor = '#000000';
-              break;
-            case 'Ravenclaw':
-              bgColor = '#0E1A40';
-              textColor = '#946B2D';
-              break;
-            case 'Slytherin':
-              bgColor = '#1A472A';
-              textColor = '#5D5D5D';
-              break;
-          }
-          
-          const resultDiv = document.createElement('div');
-          resultDiv.style.cssText = `
-            text-align: center; 
-            margin: 50px auto; 
-            padding: 30px; 
-            background-color: ${bgColor}; 
-            color: ${textColor}; 
-            border-radius: 10px;
-          `;
-          
-          resultDiv.innerHTML = `
-            <h1>The Sorting Hat Has Decided!</h1>
-            <h2 style="font-size: 2.5em;">You belong in ${data.house}!</h2>
-            <div style="margin-top: 20px;">
-              <a href="/" style="margin-right: 20px; padding: 10px; background-color: #333; color: white; text-decoration: none; border-radius: 5px;">Try Again</a>
-              <a href="/houses" style="padding: 10px; background-color: #333; color: white; text-decoration: none; border-radius: 5px;">View All Houses</a>
-            </div>
-          `;
-          
-          document.querySelector('.container').appendChild(resultDiv);
-        }, 3000);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        document.getElementById('loadingScreen').innerHTML = '<h2 style="color: white;">An error occurred. Please try again.</h2>';
-      });
+      document.getElementById("quizForm").style.display = "none";
+      document.getElementById("loadingScreen").style.display = "block";
+
+      setTimeout(() => {
+        fetch('/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(selections)
+        })
+        .then(res => res.json())
+        .then(data => {
+          const score = Object.keys(selections).length;
+          document.getElementById("loadingScreen").style.display = "none";
+          document.getElementById("finalResult").innerText =
+            `You got ${score} points!\nThe Hat says you're in: ${data.house}`;
+          document.getElementById("resultScreen").style.display = "block";
+          playHouseAudio(data.house);
+        });
+      }, 5000);
     });
   </script>
 </body>
