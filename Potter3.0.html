@@ -252,7 +252,7 @@
           const score = Object.keys(selections).length;
           document.getElementById("loadingScreen").style.display = "none";
           document.getElementById("finalResult").innerText =
-            `You got ${score} points!\nThe Hat says you're in: ${data.house}`;
+            `Congrats!\nThe Hat says you're in: ${data.house}`;
           document.getElementById("resultScreen").style.display = "block";
           playHouseAudio(data.house);
         });
