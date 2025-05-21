@@ -1,3 +1,4 @@
+<!-- Updated Potter3.1.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -95,6 +96,17 @@
       white-space: pre-line;
     }
 
+    #viewResultsBtn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #333;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
     button:hover {
       opacity: 0.9;
     }
@@ -179,7 +191,7 @@
         <button type="button" data-house="Slytherin">D. Pick the lock or find a way around</button>
       </div>
     </div>
-
+    
     <button type="button" id="submitBtn">Submit</button>
   </form>
 
@@ -191,6 +203,7 @@
   <div id="resultScreen" class="container">
     <h2 id="finalResult"></h2>
     <div id="houseAudio" style="margin-top: 30px;"></div>
+    <button id="viewResultsBtn">See Previous Results</button>
   </div>
 
   <script>
@@ -252,12 +265,15 @@
           const score = Object.keys(selections).length;
           document.getElementById("loadingScreen").style.display = "none";
           document.getElementById("finalResult").innerText =
-  	     `Congrats!\nThe Hat says you're in: ${data.house}\nPoints earned for ${data.house}: ${data.points}`;
-
+            `Congrats!\nThe Hat says you're in: ${data.house}\nPoints earned for ${data.house}: ${data.points}`;
           document.getElementById("resultScreen").style.display = "block";
           playHouseAudio(data.house);
         });
       }, 5000);
+    });
+
+    document.getElementById("viewResultsBtn").addEventListener("click", () => {
+      window.location.href = "/results";
     });
   </script>
 </body>
