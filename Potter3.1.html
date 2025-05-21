@@ -103,7 +103,7 @@
 <body>
 
   <video class="bg-video" autoplay muted loop>
-    <source src="vecteezy_animated-flying-through-the-stars-and-blue-and-red-in-space_8079146.mp4" type="video/mp4">
+    <source src="{{ url_for('static', filename='vecteezy_animated-flying-through-the-stars-and-blue-and-red-in-space_8079146.mp4') }}" type="video/mp4">
     Your browser does not support the video tag.
   </video>
 
@@ -252,7 +252,8 @@
           const score = Object.keys(selections).length;
           document.getElementById("loadingScreen").style.display = "none";
           document.getElementById("finalResult").innerText =
-            `Congrats!\nThe Hat says you're in: ${data.house}`;
+  	     `Congrats!\nThe Hat says you're in: ${data.house}\nPoints earned for ${data.house}: ${data.points}`;
+
           document.getElementById("resultScreen").style.display = "block";
           playHouseAudio(data.house);
         });
