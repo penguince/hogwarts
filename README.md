@@ -4,9 +4,9 @@
 
 1. Make sure you have Python 3 installed.
 2. Install Flask:
-   ```powershell
+   powershell
    pip install flask
-   ```
+   
 3. Run the backend server:
    ```powershell
    python main.py
